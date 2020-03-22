@@ -1,203 +1,217 @@
-import Head from 'next/head'
+import React from "react"
+import Head from "next/head"
+import Link from "next/link"
+import { withRouter } from 'next/router'
+import {
+  Button,
+  Modal,
+  Divider,
+  Form,
+  FormGroup,
+  FormControl,
+  ControlLabel,
+  HelpBlock,
+  Input,
+  Alert,
+  Icon
+} from "rsuite"
+import Hotkeys from "react-hot-keys"
+import "isomorphic-unfetch"
+import "../common/style/index.less"
 
-const Home = () => (
-  <div className="container">
-    <Head>
-      <title>Create Next App</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+class Home extends React.Component {
+  state = {
+    formValue: {
+      name: "",
+      url: "",
+      desc: ""
+    },
+    show: false,
+    miniShow: false,
+    currentProjuectId: ""
+  }
 
-    <main>
-      <h1 className="title">
-        Welcome to <a href="https://nextjs.org">Next.js!</a>
-      </h1>
+  static async getInitialProps() {
+    // eslint-disable-next-line no-undef
+    const res = await fetch("http://localhost:8084/list")
+    const json = await res.json()
+    return { projects: json.data }
+  }
 
-      <p className="description">
-        Get started by editing <code>pages/index.js</code>
-      </p>
+  onOpen = () => {
+    this.setState({
+      show: true
+    })
+  }
 
-      <div className="grid">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+  onClose = (str, e) => {
+    this.setState({
+      show: false,
+      formValue: { name: "", url: "", desc: "" }
+    })
+  }
 
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Learn &rarr;</h3>
-          <p>Learn about Next.js in an interactive course with quizzes!</p>
-        </a>
+  onMiniClose = () => {
+    this.setState({
+      miniShow: false,
+      show: false
+    })
+    window.location.reload()
+  }
 
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Discover and deploy boilerplate example Next.js projects.</p>
-        </a>
+  onKeyUp = (str, e) => {
+    e.preventDefault()
+    this.setState({ show: true })
+  }
 
-        <a
-          href="https://zeit.co/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          className="card"
-        >
-          <h3>Deploy &rarr;</h3>
-          <p>
-            Instantly deploy your Next.js site to a public URL with ZEIT Now.
-          </p>
-        </a>
+  onSubmit = async () => {
+    const { name, url, desc } = this.state.formValue
+    let formdata = new FormData()
+    formdata.append("name", "admin")
+    const res = await fetch("http://localhost:8084/list/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, url, desc })
+    })
+    const json = await res.json()
+    if (!json.code) {
+      this.setState({
+        miniShow: true,
+        currentProjuectId: json.data.id
+      })
+    } else {
+      Alert.error("重复的项目名字")
+    }
+  }
+
+  onDelete = async id => {
+    const res = await fetch("http://localhost:8084/list/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ id })
+    })
+    await res.json()
+    window.location.reload()
+  }
+
+  onEnterProject = (keyName, e) => {
+    e.preventDefault()
+    console.log(this.state.currentProjuectId)
+  }
+
+  handleChange = value => {
+    this.setState({
+      formValue: value
+    })
+  }
+
+  render() {
+    const { projects } = this.props
+    return (
+      <div className="layout p-index">
+        <Head>
+          <title>Home</title>
+        </Head>
+        <Hotkeys keyName="ctrl+o" onKeyDown={this.onKeyUp}>
+          <div className="hero container">
+            <h1 className="title">Welcome to Moooooooooooooooooock</h1>
+            <Button
+              onClick={this.onOpen.bind(this)}
+              className="margin-tb-10"
+              appearance="ghost"
+            >
+              创建项目
+            </Button>
+          </div>
+        </Hotkeys>
+        <div className="margin-top-10">
+          {projects.map((project, index) => (
+            <div key={index}>
+              <div className="flex justify-between text-desc">
+                <Link href={`detail?id=${project.id}`}>
+                  <div className="flex flex-flex left cursor-point">
+                    <div>{`${index + 1}.  `}&nbsp;</div>
+                    <div>
+                      <div>
+                        {project.name}{" "}
+                        <span className="text-extra-deep">
+                          （{project.desc}）
+                        </span>
+                      </div>
+                      <div className="text-extra">{project.url}</div>
+                    </div>
+                  </div>
+                </Link>
+                <Icon
+                  icon="close cursor-point"
+                  onClick={() => this.onDelete(project.id)}
+                />
+              </div>
+              <Divider />
+            </div>
+          ))}
+        </div>
+
+        <Modal show={this.state.show} onHide={this.onClose} size="xs">
+          <Modal.Header>
+            <Modal.Title>创建项目</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form
+              fluid
+              onChange={this.handleChange}
+              formValue={this.state.formValue}
+            >
+              <FormGroup>
+                <ControlLabel>项目名称</ControlLabel>
+                <FormControl autoFocus name="name" />
+                <HelpBlock>Required</HelpBlock>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>项目路径</ControlLabel>
+                <Hotkeys keyName="ctrl+a" onKeyDown={this.onClose}>
+                  <FormControl name="url" />
+                </Hotkeys>
+                <HelpBlock>Required</HelpBlock>
+              </FormGroup>
+              <FormGroup>
+                <ControlLabel>描述</ControlLabel>
+                <FormControl rows={5} name="desc" componentClass="textarea" />
+              </FormGroup>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.onSubmit} appearance="primary">
+              确定
+            </Button>
+            <Button onClick={this.onClose} appearance="subtle">
+              取消
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        <Modal size="xs" show={this.state.miniShow} onHide={this.onMiniClose}>
+          <Hotkeys keyName="enter" onKeyDown={this.onEnterProject}>
+            <Modal.Body>
+              <div className="text-center">
+                <Icon
+                  size="2x"
+                  icon="check-circle text-success margin-bottom-10"
+                />
+              </div>
+              <Modal.Title className="text-center">
+                创建成功，是否进入项目？
+              </Modal.Title>
+            </Modal.Body>
+          </Hotkeys>
+        </Modal>
       </div>
-    </main>
+    )
+  }
+}
 
-    <footer>
-      <a
-        href="https://zeit.co?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Powered by <img src="/zeit.svg" alt="ZEIT Logo" />
-      </a>
-    </footer>
-
-    <style jsx>{`
-      .container {
-        min-height: 100vh;
-        padding: 0 0.5rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      main {
-        padding: 5rem 0;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-
-      footer {
-        width: 100%;
-        height: 100px;
-        border-top: 1px solid #eaeaea;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      footer img {
-        margin-left: 0.5rem;
-      }
-
-      footer a {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .title a {
-        color: #0070f3;
-        text-decoration: none;
-      }
-
-      .title a:hover,
-      .title a:focus,
-      .title a:active {
-        text-decoration: underline;
-      }
-
-      .title {
-        margin: 0;
-        line-height: 1.15;
-        font-size: 4rem;
-      }
-
-      .title,
-      .description {
-        text-align: center;
-      }
-
-      .description {
-        line-height: 1.5;
-        font-size: 1.5rem;
-      }
-
-      code {
-        background: #fafafa;
-        border-radius: 5px;
-        padding: 0.75rem;
-        font-size: 1.1rem;
-        font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-          DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-      }
-
-      .grid {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-
-        max-width: 800px;
-        margin-top: 3rem;
-      }
-
-      .card {
-        margin: 1rem;
-        flex-basis: 45%;
-        padding: 1.5rem;
-        text-align: left;
-        color: inherit;
-        text-decoration: none;
-        border: 1px solid #eaeaea;
-        border-radius: 10px;
-        transition: color 0.15s ease, border-color 0.15s ease;
-      }
-
-      .card:hover,
-      .card:focus,
-      .card:active {
-        color: #0070f3;
-        border-color: #0070f3;
-      }
-
-      .card h3 {
-        margin: 0 0 1rem 0;
-        font-size: 1.5rem;
-      }
-
-      .card p {
-        margin: 0;
-        font-size: 1.25rem;
-        line-height: 1.5;
-      }
-
-      @media (max-width: 600px) {
-        .grid {
-          width: 100%;
-          flex-direction: column;
-        }
-      }
-    `}</style>
-
-    <style jsx global>{`
-      html,
-      body {
-        padding: 0;
-        margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-          Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-    `}</style>
-  </div>
-)
-
-export default Home
+export default withRouter(Home)

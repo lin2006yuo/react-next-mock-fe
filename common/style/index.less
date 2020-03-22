@@ -1,0 +1,124 @@
+@import "~rsuite/lib/styles/themes/dark/index.less";
+@import "./custom-theme.less";
+@import "./constant.less";
+
+html,
+body {
+  height: 100%;
+}
+
+#__next {
+  height: 100%;
+}
+
+//滚动条的宽度
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.layout {
+  padding: 50px;
+  width: 100%;
+  padding: 50px;
+}
+
+.p-index {
+  .title {
+    margin: 0;
+    width: 100%;
+    padding-top: 30px;
+    line-height: 1.15;
+    color: @primary-color;
+    font-size: 60px;
+  }
+  .test {
+    color: white;
+  }
+}
+
+.p-detail {
+  padding: 40px;
+  height: 100%;
+  position: relative;
+
+  // 接口列表
+  .list-wrap {
+    height: 100%;
+    flex: 0 0 22%;
+    width: 0;
+    .title {
+      height: 100px;
+    }
+    .list {
+      // flex-grow: 1;
+      // flex-shrink: 1;
+      overflow-y: auto;
+      flex: 1;
+      &-item:hover {
+        color: @primary-color
+      }
+    }
+  }
+
+  .detail-wrap {
+    flex: 0 0 78%;
+  }
+}
+
+// todo c-search
+// search_input组件
+.search {
+  position: absolute;
+  top: 80px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  .search-input {
+    width: 80vw;
+    margin: auto;
+
+    display: block;
+    color: #fff;
+    background-color: #1a1d24;
+    background-image: none;
+    border: 1px solid #3c3f43;
+    transition: border-color ease-in-out 0.3s;
+    border-radius: 0px;
+    padding: 9px 11px;
+    font-size: 16px;
+    line-height: 1.375;
+    &:focus,
+    &:hover {
+      border-color: #d12f2a;
+      outline: 0;
+    }
+  }
+
+  .filter-wrap {
+    height: 500px;
+    position: absolute;
+    .filter-list {
+      width: 80vw;
+      margin: auto;
+      background-color: @bg-color-light;
+      border: 1px solid @border-color;
+      .filter-item {
+        padding: 10px;
+        &.active {
+          color: @primary-color;
+        }
+      }
+    }
+  }
+}
+// detail_item组件
+.c-detail-item {
+  display: flex;
+  .name {
+    width: 60px;
+  }
+  .text {
+    flex: 1;
+  }
+}
