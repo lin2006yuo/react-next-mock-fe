@@ -117,8 +117,7 @@ class Detail extends React.Component {
             text={api.desc}
           />
           <DetailItem className="margin-bottom-10" name="url" text={api.url} />
-
-          <Editor />
+          <Editor key={api.id} json={api.content}/>
         </div>
       </div>
     )

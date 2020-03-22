@@ -1,40 +1,21 @@
 import React, { Component } from "react"
-// import { JsonEditor as Editor } from 'jsoneditor-react';
-import JSONEditor from 'jsoneditor'
-import "jsoneditor/dist/jsoneditor.min.css"
-
-// const JSONEditor = dynamic(import("jsoneditor"), {
-//   ssr: false
-// })
+import JSONInput from "react-json-editor-ajrm"
+import locale from "react-json-editor-ajrm/locale/en"
 
 class MyEditor extends Component {
   state = {}
   containerRef = React.createRef()
 
-
-
-  initJsonEditor = () => {
-    const options = {
-      mode: 'code',
-      history: true
-    };
-
-    this.jsoneditor = new JSONEditor(this.containerRef.current, options)
-    // this.jsoneditor.set(this.props.value)
-  }
-
-  componentDidMount() {
-    // console.log(this.containerRef)
-    this.initJsonEditor()
-  }
-
   render() {
-    console.log(this.ref)
     // return <JsonEditor value={""} onChange={this.handleChange} />
+    const json = this.props.json ? JSON.parse(this.props.json) : {}
     return (
-      <div
-        className="jsoneditor-react-container"
-        ref={this.containerRef}
+      <JSONInput
+        id="a_unique_id"
+        placeholder={json}
+        // colors={darktheme}
+        // locale={this.props.json}
+        height="550px"
       />
     )
   }
