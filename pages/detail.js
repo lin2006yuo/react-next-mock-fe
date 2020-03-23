@@ -36,12 +36,10 @@ class Detail extends React.Component {
       projectId: props.url.query.id,
       apis: props.apiInfo.list,
       showSearch: false,
+      detailLoading: false,
+      editorError: false,
 
-      detail: {
-        api: {},
-        projectName: "quxue-management-frontend",
-        projectId: "7355dd29-1b81-4470-80b2-8f0619c5c69f"
-      }
+      detail: { name: "", desc: "", url: "", content: "" }
     }
   }
 
@@ -53,17 +51,75 @@ class Detail extends React.Component {
   }
 
   handleItemClick = async id => {
-    const res = await fetch(`http://localhost:8084/detail/edit?id=${id}`)
-    const json = await res.json()
+    if (this.detailLoading) return
+    this.setState(
+      {
+        detailLoading: true,
+        editorError: false
+      },
+      async () => {
+        const res = await fetch(`http://localhost:8084/detail/edit?id=${id}`)
+        const json = await res.json()
+        this.setState({
+          detail: json.data,
+          detailLoading: false
+        })
+      }
+    )
+  }
+
+  handleApiEdit() {
+    console.log("submit")
+  }
+
+  handleInputChange = (field, value) => {
+    if (field === "content" && this.state.editorError) {
+      console.log(1232)
+      this.setState({
+        editorError: false,
+        detail: {
+          ...this.state.detail,
+          [field]: value
+        }
+      })
+    } else {
+      this.setState({
+        detail: {
+          ...this.state.detail,
+          [field]: value
+        }
+      })
+    }
+  }
+
+  handleEditError = () => {
     this.setState({
-      detail: json.data
+      editorError: true
     })
+  }
+
+  handleModify = async () => {
+    if (this.state.editorError) {
+      return Alert.warning("JSON格式错误")
+    }
+    const { name, desc, url, content, id, projectId } = this.state.detail
+    const res = await fetch("http://localhost:8084/detail/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, desc, url, content, projectId, apiId: id })
+    })
+    const json = await res.json()
+    if (!json.code) {
+      return Alert.success("修改成功")
+    }
   }
 
   render() {
     const { projectUrl } = this.props.apiInfo
     const { apis } = this.state
-    const { api, projectName, projectId } = this.state.detail
+    const { detail: api, editorError } = this.state
 
     return (
       <div className="flex p-detail">
@@ -109,15 +165,43 @@ class Detail extends React.Component {
           <DetailItem
             className="margin-bottom-10"
             name="名称"
+            field="name"
+            onChange={this.handleInputChange}
             text={api.name}
           />
           <DetailItem
             className="margin-bottom-10"
             name="描述"
+            field="desc"
+            onChange={this.handleInputChange}
             text={api.desc}
           />
-          <DetailItem className="margin-bottom-10" name="url" text={api.url} />
-          <Editor key={api.id} json={api.content}/>
+          <DetailItem
+            field="url"
+            className="margin-bottom-10"
+            name="url"
+            onChange={this.handleInputChange}
+            text={api.url}
+          />
+
+          <div className="flex">
+            <Editor
+              field="content"
+              onChange={this.handleInputChange}
+              onEditorError={this.handleEditError}
+              json={api.content}
+            />
+            <Button
+              onClick={this.handleApiEdit.bind(this)}
+              appearance="ghost"
+              className="margin-left-10"
+              disabled={!api.url || !api.name || !api.content}
+              style={{ width: "80px", height: "46px" }}
+              onClick={this.handleModify}
+            >
+              修改
+            </Button>
+          </div>
         </div>
       </div>
     )
