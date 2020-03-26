@@ -1,4 +1,5 @@
 import React from "react"
+import { findDomNode  } from 'react-dom'
 import Head from "next/head"
 import {
   Button,
@@ -31,8 +32,12 @@ class SearchInput extends React.Component {
     listItemIndex: 0
   }
 
+  componentDidMount() {
+    this.props.onRef(this)
+  }
+
   handleOpen = (keyName, e) => {
-    e.preventDefault()
+    e && e.preventDefault()
     this.setState(
       {
         showSearch: !this.state.showSearch
@@ -58,6 +63,7 @@ class SearchInput extends React.Component {
     const { listItemIndex } = this.state
     /**
      * keyCode
+     *  ender === 13
      *  esc === 27
      *  up === 38
      *  down === 40
@@ -80,6 +86,14 @@ class SearchInput extends React.Component {
           listItemIndex: listItemIndex + 1
         })
         break
+      case 13:
+        const selectItem = this.state.filterList[listItemIndex]
+        const el = document.getElementById(selectItem.id)
+        el.scrollIntoView()
+        this.props.onSelected && this.props.onSelected(selectItem.id)
+        this.setState({
+          showSearch: false
+        })
       default:
         break
     }

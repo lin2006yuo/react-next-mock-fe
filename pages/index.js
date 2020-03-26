@@ -1,7 +1,7 @@
 import React from "react"
 import Head from "next/head"
 import Link from "next/link"
-import { withRouter } from 'next/router'
+import Router, { withRouter } from "next/router"
 import {
   Button,
   Modal,
@@ -27,7 +27,9 @@ class Home extends React.Component {
       desc: ""
     },
     show: false,
-    miniShow: false,
+    miniShow: false, //是否进入项目
+    deleteShow: false, //是否删除
+    selectId: "", // 删除选中的id
     currentProjuectId: ""
   }
 
@@ -87,6 +89,14 @@ class Home extends React.Component {
   }
 
   onDelete = async id => {
+    this.setState({
+      selectId: id,
+      deleteShow: true
+    })
+  }
+
+  handleDelete = async () => {
+    const id = this.state.selectId
     const res = await fetch("http://localhost:8084/list/delete", {
       method: "POST",
       headers: {
@@ -100,7 +110,7 @@ class Home extends React.Component {
 
   onEnterProject = (keyName, e) => {
     e.preventDefault()
-    console.log(this.state.currentProjuectId)
+    Router.push(`/detail?id=${this.state.currentProjuectId}`)
   }
 
   handleChange = value => {
@@ -208,6 +218,42 @@ class Home extends React.Component {
               </Modal.Title>
             </Modal.Body>
           </Hotkeys>
+        </Modal>
+
+        <Modal
+          size="xs"
+          show={this.state.deleteShow}
+          onHide={() => {
+            this.setState({
+              deleteShow: false
+            })
+          }}
+        >
+          <Modal.Body>
+            <div className="text-center">
+              <Icon
+                size="2x"
+                icon="close-circle text-error margin-bottom-10"
+              />
+            </div>
+            <Modal.Title className="text-center">是否删除该项目？</Modal.Title>
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button onClick={this.handleDelete} appearance="primary">
+              确定
+            </Button>
+            <Button
+              onClick={() => {
+                this.setState({
+                  deleteShow: false
+                })
+              }}
+              appearance="subtle"
+            >
+              取消
+            </Button>
+          </Modal.Footer>
         </Modal>
       </div>
     )

@@ -55,8 +55,23 @@ body {
       // flex-shrink: 1;
       overflow-y: auto;
       flex: 1;
+      &-item {
+        position: relative;
+        user-select: none;
+        .delete {
+          position: absolute;
+          color: @primary-color;
+          left: -20px;
+          top: 0;
+          line-height: 18px;
+          visibility: hidden;
+          transition: opacity 0.5s linear;
+          opacity: 0;
+          z-index: 20
+        }
+      }
       &-item:hover {
-        color: @primary-color
+        color: @primary-color;
       }
     }
   }
