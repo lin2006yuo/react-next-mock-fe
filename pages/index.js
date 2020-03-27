@@ -11,13 +11,13 @@ import {
   FormControl,
   ControlLabel,
   HelpBlock,
-  Input,
   Alert,
   Icon
 } from "rsuite"
 import Hotkeys from "react-hot-keys"
 import "isomorphic-unfetch"
-import "../common/style/index.less"
+import "common/style/index.less"
+import { getProjectList } from 'api/index'
 
 class Home extends React.Component {
   state = {
@@ -34,10 +34,8 @@ class Home extends React.Component {
   }
 
   static async getInitialProps() {
-    // eslint-disable-next-line no-undef
-    const res = await fetch("http://localhost:8084/list")
-    const json = await res.json()
-    return { projects: json.data }
+    const data = await getProjectList()
+    return { projects: data }
   }
 
   onOpen = () => {
@@ -68,20 +66,12 @@ class Home extends React.Component {
 
   onSubmit = async () => {
     const { name, url, desc } = this.state.formValue
-    let formdata = new FormData()
-    formdata.append("name", "admin")
-    const res = await fetch("http://localhost:8084/list/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ name, url, desc })
-    })
-    const json = await res.json()
+    const data = await createProject({name, url, desc})
+    // const json = await res.json()
     if (!json.code) {
       this.setState({
         miniShow: true,
-        currentProjuectId: json.data.id
+        currentProjuectId: data.id
       })
     } else {
       Alert.error("重复的项目名字")

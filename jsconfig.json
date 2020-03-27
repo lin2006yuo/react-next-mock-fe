@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "common/*": [
+        "common/*"
+      ],
+      "components/*": ["components/*"],
+      "api/*": ["api/*"],
+    },
+    "experimentalDecorators": true
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

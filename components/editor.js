@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import ace from "brace"
 // import JSONEditor from "jsoneditor"
-import "jsoneditor/dist/jsoneditor.min.css"
 import "brace/theme/monokai"
 import "brace/mode/json"
 import "brace/ext/beautify" // get reference to extension

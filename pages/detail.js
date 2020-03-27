@@ -2,32 +2,19 @@ import React from "react"
 import Head from "next/head"
 import {
   Button,
-  Modal,
   Divider,
-  Form,
-  FormGroup,
-  FormControl,
-  ControlLabel,
-  HelpBlock,
-  Input,
-  Alert,
-  Icon,
   Popover,
-  Whisper,
-  Animation
+  Whisper
 } from "rsuite"
 import Hotkeys from "react-hot-keys"
 import "isomorphic-unfetch"
-// import "../common/style/index.less"
-import SearchInput from "../components/search_input"
-import DetailItem from "../components/detail_item"
-// import Editor from "../components/editor"
+import SearchInput from "components/search_input"
+import DetailItem from "components/detail_item"
 import dynamic from "next/dynamic"
 import { withRouter } from "next/router"
 import Router from "next/router"
-// import Editor from '../components/editor'
 
-const Editor = dynamic(import("../components/editor"), {
+const Editor = dynamic(import("components/editor"), {
   ssr: false
 })
 
