@@ -21,6 +21,7 @@ module.exports = withCss(
         'common': resolve('common'),
         'components': resolve('components'),
         'api': resolve('api'),
+        ...config.resolve.alias
       }
       return config
     }

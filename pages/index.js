@@ -12,25 +12,25 @@ import {
   ControlLabel,
   HelpBlock,
   Alert,
-  Icon
+  Icon,
 } from "rsuite"
 import Hotkeys from "react-hot-keys"
 import "isomorphic-unfetch"
 import "common/style/index.less"
-import { getProjectList } from 'api/index'
+import { getProjectList, createProject } from "api/index"
 
 class Home extends React.Component {
   state = {
     formValue: {
       name: "",
       url: "",
-      desc: ""
+      desc: "",
     },
     show: false,
     miniShow: false, //是否进入项目
     deleteShow: false, //是否删除
     selectId: "", // 删除选中的id
-    currentProjuectId: ""
+    currentProjuectId: "",
   }
 
   static async getInitialProps() {
@@ -40,21 +40,21 @@ class Home extends React.Component {
 
   onOpen = () => {
     this.setState({
-      show: true
+      show: true,
     })
   }
 
   onClose = (str, e) => {
     this.setState({
       show: false,
-      formValue: { name: "", url: "", desc: "" }
+      formValue: { name: "", url: "", desc: "" },
     })
   }
 
   onMiniClose = () => {
     this.setState({
       miniShow: false,
-      show: false
+      show: false,
     })
     window.location.reload()
   }
@@ -64,24 +64,20 @@ class Home extends React.Component {
     this.setState({ show: true })
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     const { name, url, desc } = this.state.formValue
-    const data = await createProject({name, url, desc})
-    // const json = await res.json()
-    if (!json.code) {
+    createProject({ name, url, desc }).then((data) => {
       this.setState({
         miniShow: true,
-        currentProjuectId: data.id
+        currentProjuectId: data.id,
       })
-    } else {
-      Alert.error("重复的项目名字")
-    }
+    })
   }
 
-  onDelete = async id => {
+  onDelete = async (id) => {
     this.setState({
       selectId: id,
-      deleteShow: true
+      deleteShow: true,
     })
   }
 
@@ -90,9 +86,9 @@ class Home extends React.Component {
     const res = await fetch("http://localhost:8084/list/delete", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id })
+      body: JSON.stringify({ id }),
     })
     await res.json()
     window.location.reload()
@@ -103,9 +99,9 @@ class Home extends React.Component {
     Router.push(`/detail?id=${this.state.currentProjuectId}`)
   }
 
-  handleChange = value => {
+  handleChange = (value) => {
     this.setState({
-      formValue: value
+      formValue: value,
     })
   }
 
@@ -215,16 +211,13 @@ class Home extends React.Component {
           show={this.state.deleteShow}
           onHide={() => {
             this.setState({
-              deleteShow: false
+              deleteShow: false,
             })
           }}
         >
           <Modal.Body>
             <div className="text-center">
-              <Icon
-                size="2x"
-                icon="close-circle text-error margin-bottom-10"
-              />
+              <Icon size="2x" icon="close-circle text-error margin-bottom-10" />
             </div>
             <Modal.Title className="text-center">是否删除该项目？</Modal.Title>
           </Modal.Body>
@@ -236,7 +229,7 @@ class Home extends React.Component {
             <Button
               onClick={() => {
                 this.setState({
-                  deleteShow: false
+                  deleteShow: false,
                 })
               }}
               appearance="subtle"

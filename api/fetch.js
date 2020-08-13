@@ -19,7 +19,7 @@ class Fetch {
   constructor() {
     this.domain = domain
     this.url = ""
-    this.data = {}
+    this._data = {}
   }
   setDomain(domain) {
     this.domain = domain
@@ -28,11 +28,11 @@ class Fetch {
     this.url = url
   }
   data(data) {
-    this.data = data
+    this._data = data
     return this
   }
   async get() {
-    const href = handleGetHref(this.domain + this.url, this.data)
+    const href = handleGetHref(this.domain + this.url, this._data)
     const res = await fetch(href)
     return this.responseInterceptor(res)
   }
@@ -42,18 +42,18 @@ class Fetch {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(this.data)
+      body: JSON.stringify(this._data)
     })
     return this.responseInterceptor(res)
   }
 
-  async responseInterceptor(res) {
+  responseInterceptor(res) {
     // todo 根据状态显示弹窗类型
     if (statusCode[res.status]) {
-      return
+      Alert.error(statusCode[res.status].msg)
+      return Promise.reject()
     }
-    const json = await res.json()
-    return json
+    return res.json().then(json => json)
   }
 }
 
