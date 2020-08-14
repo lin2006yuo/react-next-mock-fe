@@ -42,7 +42,7 @@ class MyEditor extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.json !== prevProps.json) {
       this.editor.setValue(this.props.json, -1)
-      // this.editor.scrollToLine(0)
+      this.editor.scrollToLine(0)
     }
   }
 

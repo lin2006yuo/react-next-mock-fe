@@ -18,9 +18,9 @@ module.exports = withCss(
         loader: "file-loader"
       })
       config.resolve.alias = {
-        'common': resolve('common'),
-        'components': resolve('components'),
-        'api': resolve('api'),
+        'common': resolve('src/common'),
+        'components': resolve('src/components'),
+        'api': resolve('src/api'),
         ...config.resolve.alias
       }
       return config

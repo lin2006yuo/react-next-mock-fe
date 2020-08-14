@@ -4,7 +4,8 @@ import {
   Button,
   Divider,
   Popover,
-  Whisper
+  Whisper,
+  Alert
 } from "rsuite"
 import Hotkeys from "react-hot-keys"
 import "isomorphic-unfetch"
@@ -90,25 +91,25 @@ class Detail extends React.Component {
   }
 
   handleModify = async () => {
-    console.log(this.searchInputRef)
+    // console.log(this.searchInputRef)
     const { value: content, annotations } = this.editorRef.onValidate()
-    // if (annotations.length) {
-    //   return Alert.warning("JSON格式错误")
-    // }
-    // const { name, desc, url, id } = this.state.detail
-    // const projectId = this.props.router.query.id
-    // const res = await fetch("http://localhost:8084/detail/save", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify({ name, desc, url, content, projectId, apiId: id })
-    // })
-    // const json = await res.json()
-    // if (!json.code) {
-    //   Alert.success(json.msg)
-    //   this.reload()
-    // }
+    if (annotations.length) {
+      return Alert.warning("JSON格式错误")
+    }
+    const { name, desc, url, id } = this.state.detail
+    const projectId = this.props.router.query.id
+    const res = await fetch("http://localhost:8084/detail/save", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ name, desc, url, content, projectId, apiId: id })
+    })
+    const json = await res.json()
+    if (!json.code) {
+      Alert.success(json.msg)
+      this.reload()
+    }
   }
 
   handleCreate = () => {

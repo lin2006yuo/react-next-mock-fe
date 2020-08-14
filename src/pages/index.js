@@ -108,7 +108,7 @@ class Home extends React.Component {
   render() {
     const { projects } = this.props
     return (
-      <div className="layout p-index">
+      <div id='layout' className="layout p-index">
         <Head>
           <title>Home</title>
         </Head>
@@ -122,6 +122,11 @@ class Home extends React.Component {
             >
               创建项目
             </Button>
+            <Button onClick={() => {
+              MyModal.show({
+                children: <div>313</div>
+              })
+            }}>modal测试</Button>
           </div>
         </Hotkeys>
         <div className="margin-top-10">

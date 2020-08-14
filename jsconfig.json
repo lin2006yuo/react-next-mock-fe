@@ -3,10 +3,10 @@
     "baseUrl": ".",
     "paths": {
       "common/*": [
-        "common/*"
+        "src/common/*"
       ],
-      "components/*": ["components/*"],
-      "api/*": ["api/*"],
+      "components/*": ["src/components/*"],
+      "api/*": ["src/api/*"],
     },
     "experimentalDecorators": true
   },

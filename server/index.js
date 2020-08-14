@@ -1,5 +1,6 @@
 const express = require("express")
 const next = require("next")
+const serverApp = require('./app')
 
 const dev = process.env.NODE_ENV !== "production"
 const app = next({ dev })
@@ -9,6 +10,13 @@ app
   .prepare()
   .then(() => {
     const server = express()
+
+    // server.get('/api', (req, res) => {
+    //   res.json({
+    //     name: 'kev'
+    //   })
+    // })
+    serverApp(server)
 
     // 处理localhost:3000/p/12345路由的代码
     server.get("/", (req, res) => {
