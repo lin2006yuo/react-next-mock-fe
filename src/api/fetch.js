@@ -33,6 +33,7 @@ class Fetch {
   }
   async get() {
     const href = handleGetHref(this.domain + this.url, this._data)
+    console.log(href)
     const res = await fetch(href)
     return this.responseInterceptor(res)
   }

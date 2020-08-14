@@ -41,10 +41,10 @@ class Detail extends React.Component {
     const projectId = query.id
     const apiId = query.api_id
     let jsonDetail
-    const res = await fetch(`http://localhost:8084/detail?id=${projectId}`)
+    const res = await fetch(`http://localhost:3000/api/detail?id=${projectId}`)
     if (apiId) {
       const resDetail = await fetch(
-        `http://localhost:8084/detail/edit?id=${apiId}`
+        `http://localhost:3000/api/detail/edit?id=${apiId}`
       )
       jsonDetail = await resDetail.json()
     }
@@ -71,7 +71,7 @@ class Detail extends React.Component {
         Router.replace(href, href, {
           shallow: true
         })
-        const res = await fetch(`http://localhost:8084/detail/edit?id=${id}`)
+        const res = await fetch(`http://localhost:3000/api/detail/edit?id=${id}`)
         const json = await res.json()
         this.setState({
           detail: json.data,
@@ -98,7 +98,7 @@ class Detail extends React.Component {
     }
     const { name, desc, url, id } = this.state.detail
     const projectId = this.props.router.query.id
-    const res = await fetch("http://localhost:8084/detail/save", {
+    const res = await fetch("http://localhost:3000/api/detail/save", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -119,7 +119,7 @@ class Detail extends React.Component {
   }
 
   handleDeleteApi = async id => {
-    const res = await fetch("http://localhost:8084/detail/delete", {
+    const res = await fetch("http://localhost:3000/api/detail/delete", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

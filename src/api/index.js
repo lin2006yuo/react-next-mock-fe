@@ -1,8 +1,7 @@
 import Request from "api/fetch"
 
 export async function getProjectList() {
-  const json = await Request("/list").get()
-  return json.data
+  return Request("/list").get().then(json => json.data)
 }
 
 export function createProject({ name, url, desc }) {
