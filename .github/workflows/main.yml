@@ -43,3 +43,12 @@ jobs:
         REMOTE_HOST: "119.29.101.122"
         REMOTE_USER: "root"
         TARGET: "/var/www/mock"
+    - name: start
+      uses: JimCronqvist/action-ssh@master
+      with:
+        hosts: root@119.29.101.122
+        privateKey: ${{ secrets.SERVER_SSH_KEY }}
+        command: |
+          cd /var/www/mock
+          cnpm install
+          pm2 restart mock -- run start:pro || pm2 start mock -- run start:pro
