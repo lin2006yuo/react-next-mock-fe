@@ -187,7 +187,7 @@ class Detail extends React.Component {
             {apis.map((api, index) => (
               <div id={api.id} key={api.id}>
                 <div
-                 onClick={this.handleItemClick.bind(this, api.id)}
+                  onClick={this.handleItemClick.bind(this, api.id)}
                   className={`flex list-item cursor-point ${
                     api.id === apiId ? "text-primary" : ""
                   }`}
@@ -212,7 +212,8 @@ class Detail extends React.Component {
                       })
                     }}
                   >
-                    {api.url}
+                    <div>{api.url}</div>
+                    <div>{api.name}</div>
                   </div>
                 </div>
 
