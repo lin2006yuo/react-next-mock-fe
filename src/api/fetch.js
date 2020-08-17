@@ -6,7 +6,7 @@ function handleGetHref(location, object) {
   const entries = Object.entries(object)
   const len = entries.length
   if (!len) return location
-  entries.reduce((t, c, i) => {
+  return entries.reduce((t, c, i) => {
     if (i === len - 1) {
       return (t += c.join("="))
     } else {

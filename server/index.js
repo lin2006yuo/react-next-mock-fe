@@ -18,7 +18,6 @@ app
     // })
     serverApp(server)
 
-    // 处理localhost:3000/p/12345路由的代码
     server.get("/", (req, res) => {
       const actualPage = "/"
       const queryParams = { title: req.params.id }
