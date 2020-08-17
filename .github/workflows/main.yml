@@ -51,4 +51,4 @@ jobs:
         command: |
           cd /var/www/mock
           cnpm install
-          pm2 restart npm -- run start:pro || pm2 start npm -- run start:pro
+          pm2 restart npm || pm2 start npm -- run start:pro

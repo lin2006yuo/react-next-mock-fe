@@ -123,15 +123,6 @@ class Home extends React.Component {
             >
               创建项目
             </Button>
-            <Button
-              onClick={() => {
-                MyModal.show({
-                  children: <div>313</div>
-                })
-              }}
-            >
-              modal测试
-            </Button>
           </div>
         </Hotkeys>
         <div className='margin-top-10'>
