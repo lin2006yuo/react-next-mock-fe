@@ -11,7 +11,7 @@ module.exports = (app) => {
     fs.accessSync(`${process.cwd()}/server/mock_db/app.sqlite`, fs.F_OK)
     console.log("connecting the mock database")
   } catch (e) {
-    fs.mkdirSync("mock_db")
+    fs.mkdirSync(path.resolve(__dirname, "mock_db"))
     fs.copyFileSync(
       path.resolve(__dirname, `db/app.sqlite`),
       path.resolve(__dirname, `mock_db/app.sqlite`),
