@@ -36,24 +36,30 @@ class Detail extends React.Component {
     const projectId = query.id
     const apiId = query.api_id
     let jsonDetail
-    return Request('/detail').data({
-      id:projectId
-    }).get().then((json) => {
-      if(apiId) {
-        return Request('/detail/edit').data({
-          id: apiId
-        }).get().then((json2) => {
-          return {
-            apiInfo: json.data,
-            detail: json2.data
-          }
-        })
-      }
-      return {
-        apiInfo: json.data,
-        detail: initDetail,
-      }
-    })
+    return Request("/detail")
+      .data({
+        id: projectId,
+      })
+      .get()
+      .then((json) => {
+        if (apiId) {
+          return Request("/detail/edit")
+            .data({
+              id: apiId,
+            })
+            .get()
+            .then((json2) => {
+              return {
+                apiInfo: json.data,
+                detail: json2.data,
+              }
+            })
+        }
+        return {
+          apiInfo: json.data,
+          detail: initDetail,
+        }
+      })
   }
 
   handleItemClick = async (id) => {
@@ -72,14 +78,17 @@ class Detail extends React.Component {
         Router.replace(href, href, {
           shallow: true,
         })
-        Request('/detail/edit').data({
-          id
-        }).get().then((json) => {
-          this.setState({
-            detail: json.data,
-            detailLoading: false,
+        Request("/detail/edit")
+          .data({
+            id,
           })
-        })
+          .get()
+          .then((json) => {
+            this.setState({
+              detail: json.data,
+              detailLoading: false,
+            })
+          })
       }
     )
   }
@@ -116,6 +125,10 @@ class Detail extends React.Component {
       })
   }
 
+  handleTest = (url) => {
+    window.open(`/api${url}`)
+  }
+
   handleCreate = () => {
     this.setState({
       detail: initDetail,
@@ -145,12 +158,6 @@ class Detail extends React.Component {
     const apiId = this.props.router.query.api_id
 
     return (
-      // <Hotkeys
-      //   keyName="ctrl+p"
-      //   onKeyDown={(keyName,e) => {
-      //     // e.preventDefault()
-      //   }}
-      // >
       <div className="flex p-detail">
         <div className="list-wrap flex flex-column">
           <SearchInput
@@ -165,13 +172,22 @@ class Detail extends React.Component {
             <div className="text-extra text-center margin-top-10">
               {projectUrl}
             </div>
-            <Divider />
           </div>
 
           <div className="list">
+            <Button
+              block
+              appearance="ghost"
+              className="margin-tb-10"
+              onClick={this.handleCreate}
+            >
+              新增
+            </Button>
+
             {apis.map((api, index) => (
               <div id={api.id} key={api.id}>
                 <div
+                 onClick={this.handleItemClick.bind(this, api.id)}
                   className={`flex list-item cursor-point ${
                     api.id === apiId ? "text-primary" : ""
                   }`}
@@ -190,7 +206,6 @@ class Detail extends React.Component {
                   &nbsp;&nbsp;&nbsp;
                   <div
                     className="text-ellipsis"
-                    onClick={this.handleItemClick.bind(this, api.id)}
                     onDoubleClick={() => {
                       this.setState({
                         deleteConfirm: true,
@@ -224,6 +239,7 @@ class Detail extends React.Component {
           />
           <DetailItem
             field="url"
+            placeholder="/hello"
             className="margin-bottom-10"
             name="url"
             onChange={this.handleInputChange}
@@ -244,20 +260,21 @@ class Detail extends React.Component {
             <div className="flex flex-column">
               <Button
                 appearance="ghost"
-                className="margin-left-10 margin-bottom-10"
-                style={{ width: "80px", height: "46px" }}
-                onClick={this.handleCreate}
-              >
-                新增
-              </Button>
-              <Button
-                appearance="ghost"
                 className="margin-left-10"
                 disabled={!api.url || !api.name}
                 style={{ width: "80px", height: "46px" }}
                 onClick={this.handleModify}
               >
-                提交
+                提交/更新
+              </Button>
+              <Button
+                appearance="link"
+                className="margin-left-10"
+                disabled={!api.url || !api.name}
+                style={{ width: "80px", height: "46px" }}
+                onClick={() => this.handleTest(api.url)}
+              >
+                测试
               </Button>
             </div>
           </div>

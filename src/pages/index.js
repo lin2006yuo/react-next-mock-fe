@@ -115,7 +115,6 @@ class Home extends React.Component {
         </Head>
         <Hotkeys keyName='ctrl+o' onKeyDown={this.onKeyUp}>
           <div className='hero container'>
-            <h1 className='title'>Welcome to Moooooooooooooooooock</h1>
             <Button
               onClick={this.onOpen.bind(this)}
               className='margin-tb-10'
@@ -171,7 +170,7 @@ class Home extends React.Component {
               <FormGroup>
                 <ControlLabel>项目路径</ControlLabel>
                 <Hotkeys keyName='ctrl+a' onKeyDown={this.onClose}>
-                  <FormControl name='url' />
+                  <FormControl placeholder="/test" name='url' />
                 </Hotkeys>
                 <HelpBlock>Required</HelpBlock>
               </FormGroup>
