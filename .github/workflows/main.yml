@@ -23,14 +23,23 @@ jobs:
     - uses: actions/checkout@v2
 
     # action命令，安装Node10
-    - name: use Node.js 12
+    - name: install node
           # 使用action库  actions/setup-node安装node
       uses: actions/setup-node@v1
       with:
           node-version: 12
     # action命令，install && test
-    - name: npm install
+    - name: build
         # 运行的命令或者 action
       run: |
           npm install
           npm run build
+    - name: deploy
+      uses: easingthemes/ssh-deploy@v2.1.1
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        ARGS: "-avz --delete"
+        SOURCE: "./"
+        REMOTE_HOST: "119.29.101.122"
+        REMOTE_USER: "root"
+        TARGET: "/var/www/mock"
