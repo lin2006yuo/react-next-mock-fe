@@ -11,7 +11,7 @@ import Router from "next/router"
 import Request from "api/fetch"
 
 const Editor = dynamic(import("components/editor"), {
-  ssr: false,
+  ssr: false
 })
 
 const initDetail = { name: "", desc: "", url: "", content: "" }
@@ -26,7 +26,7 @@ class Detail extends React.Component {
 
       deleteConfirm: false,
 
-      detail: props.detail ? props.detail : initDetail,
+      detail: props.detail ? props.detail : initDetail
     }
     this.editorRef = React.createRef()
     this.searchInputRef = React.createRef()
@@ -38,26 +38,26 @@ class Detail extends React.Component {
     let jsonDetail
     return Request("/detail")
       .data({
-        id: projectId,
+        id: projectId
       })
       .get()
       .then((json) => {
         if (apiId) {
           return Request("/detail/edit")
             .data({
-              id: apiId,
+              id: apiId
             })
             .get()
             .then((json2) => {
               return {
                 apiInfo: json.data,
-                detail: json2.data,
+                detail: json2.data
               }
             })
         }
         return {
           apiInfo: json.data,
-          detail: initDetail,
+          detail: initDetail
         }
       })
   }
@@ -67,26 +67,26 @@ class Detail extends React.Component {
     this.setState(
       {
         detailLoading: true,
-        editorError: false,
+        editorError: false
       },
       async () => {
         const {
           query: { id: projectId },
-          pathname,
+          pathname
         } = this.props.router
         const href = `${pathname}?id=${projectId}&api_id=${id}`
         Router.replace(href, href, {
-          shallow: true,
+          shallow: true
         })
         Request("/detail/edit")
           .data({
-            id,
+            id
           })
           .get()
           .then((json) => {
             this.setState({
               detail: json.data,
-              detailLoading: false,
+              detailLoading: false
             })
           })
       }
@@ -97,8 +97,8 @@ class Detail extends React.Component {
     this.setState({
       detail: {
         ...this.state.detail,
-        [field]: value,
-      },
+        [field]: value
+      }
     })
   }
 
@@ -117,7 +117,7 @@ class Detail extends React.Component {
         url,
         content,
         projectId,
-        apiId: id,
+        apiId: id
       })
       .post()
       .then((res) => {
@@ -130,15 +130,20 @@ class Detail extends React.Component {
   }
 
   handleCreate = () => {
+    this.editorRef.editor.setValue(`{
+  "code": 0,
+  "data": [],
+  "msg": "ok"
+}`)
     this.setState({
-      detail: initDetail,
+      detail: initDetail
     })
   }
 
   handleDeleteApi = async (id) => {
     Request("/detail/delete")
       .data({
-        id,
+        id
       })
       .post()
       .then(() => {
@@ -158,8 +163,8 @@ class Detail extends React.Component {
     const apiId = this.props.router.query.api_id
 
     return (
-      <div className="flex p-detail">
-        <div className="list-wrap flex flex-column">
+      <div className='flex p-detail'>
+        <div className='list-wrap flex flex-column'>
           <SearchInput
             onRef={(ref) => {
               this.searchInputRef = ref
@@ -167,18 +172,18 @@ class Detail extends React.Component {
             list={apis}
             onSelected={this.handleItemClick}
           />
-          <div className="title">
-            <header className="text-center">接口列表</header>
-            <div className="text-extra text-center margin-top-10">
+          <div className='title'>
+            <header className='text-center'>接口列表</header>
+            <div className='text-extra text-center margin-top-10'>
               {projectUrl}
             </div>
           </div>
 
-          <div className="list">
+          <div className='list'>
             <Button
               block
-              appearance="ghost"
-              className="margin-tb-10"
+              appearance='ghost'
+              className='margin-tb-10'
               onClick={this.handleCreate}
             >
               新增
@@ -193,8 +198,8 @@ class Detail extends React.Component {
                   }`}
                 >
                   <Whisper
-                    placement="right"
-                    trigger="active"
+                    placement='right'
+                    trigger='active'
                     speaker={
                       <Popover>
                         <p>{api.url}</p>
@@ -205,10 +210,10 @@ class Detail extends React.Component {
                   </Whisper>
                   &nbsp;&nbsp;&nbsp;
                   <div
-                    className="text-ellipsis"
+                    className='text-ellipsis'
                     onDoubleClick={() => {
                       this.setState({
-                        deleteConfirm: true,
+                        deleteConfirm: true
                       })
                     }}
                   >
@@ -222,34 +227,34 @@ class Detail extends React.Component {
             ))}
           </div>
         </div>
-        <Divider className="height-100" vertical />
-        <div className="detail-wrap">
+        <Divider className='height-100' vertical />
+        <div className='detail-wrap'>
           <DetailItem
-            className="margin-bottom-10"
-            name="名称"
-            field="name"
+            className='margin-bottom-10'
+            name='名称'
+            field='name'
             onChange={this.handleInputChange}
             text={api.name}
           />
           <DetailItem
-            className="margin-bottom-10"
-            name="描述"
-            field="desc"
+            className='margin-bottom-10'
+            name='描述'
+            field='desc'
             onChange={this.handleInputChange}
             text={api.desc}
           />
           <DetailItem
-            field="url"
-            placeholder="/hello"
-            className="margin-bottom-10"
-            name="url"
+            field='url'
+            placeholder='/hello'
+            className='margin-bottom-10'
+            name='url'
             onChange={this.handleInputChange}
             text={api.url}
           />
 
-          <div className="flex">
+          <div className='flex'>
             <Editor
-              field="content"
+              field='content'
               json={api.content}
               onRef={(ref) => {
                 this.editorRef = ref
@@ -258,10 +263,10 @@ class Detail extends React.Component {
                 this.searchInputRef.handleOpen()
               }}
             />
-            <div className="flex flex-column">
+            <div className='flex flex-column'>
               <Button
-                appearance="ghost"
-                className="margin-left-10"
+                appearance='ghost'
+                className='margin-left-10'
                 disabled={!api.url || !api.name}
                 style={{ width: "80px", height: "46px" }}
                 onClick={this.handleModify}
@@ -269,8 +274,8 @@ class Detail extends React.Component {
                 提交/更新
               </Button>
               <Button
-                appearance="link"
-                className="margin-left-10"
+                appearance='link'
+                className='margin-left-10'
                 disabled={!api.url || !api.name}
                 style={{ width: "80px", height: "46px" }}
                 onClick={() => this.handleTest(api.url)}
