@@ -38,7 +38,7 @@ jobs:
       uses: easingthemes/ssh-deploy@v2.1.1
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-        ARGS: "-avz --delete"
+        ARGS: "-avz --delete –exclude=db –exclude=mock_db"
         SOURCE: "./"
         REMOTE_HOST: "119.29.101.122"
         REMOTE_USER: "root"
