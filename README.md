@@ -17,6 +17,6 @@ npm run build && npm run start:pro
 - react
 
 ## 报错
- > cannt not read the 'map' of undefinded  
+ > cannt not read property 'map' of undefinded  
 
 server/mock/app.sqlite数据有问题，复制server/db/app.sqlite覆盖掉
