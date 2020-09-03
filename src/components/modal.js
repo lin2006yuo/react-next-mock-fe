@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
 import { Modal, Button, Icon } from 'rsuite'
 
 class MyModal extends Component {
