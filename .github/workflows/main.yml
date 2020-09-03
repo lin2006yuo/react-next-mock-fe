@@ -38,7 +38,7 @@ jobs:
       uses: easingthemes/ssh-deploy@v2.1.1
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-        ARGS: "-avz –-exclude 'server/db' –-exclude 'server/mock_db'"
+        ARGS: "-avz –-exclude 'server/db/app.sqlite' –-exclude 'server/mock_db/app.sqlite'"
         SOURCE: "./"
         REMOTE_HOST: "119.29.101.122"
         REMOTE_USER: "root"
