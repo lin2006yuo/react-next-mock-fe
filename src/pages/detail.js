@@ -70,6 +70,7 @@ class Detail extends React.Component {
 
   handleItemClick = async (id) => {
     if (this.detailLoading) return
+    this.handleSearchOpen(false)
     this.setState(
       {
         detailLoading: true,

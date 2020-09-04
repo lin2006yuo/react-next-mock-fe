@@ -47,7 +47,7 @@ body {
   }
 
   .search-icon:hover {
-    color: @primary-color
+    color: @primary-color;
   }
 
   // 接口列表
@@ -156,4 +156,28 @@ body {
   .text {
     flex: 1;
   }
+}
+
+.c-editor {
+  position: relative;
+}
+.json-editor:hover + .json-tool {
+  display: block;
+}
+
+.json-tool {
+  // width: 100px;
+  // height: 100px;
+  // background-color: #fff;
+  // display: none;
+  background-color: #000;
+  border: 1px solid @primary-color;
+  padding: 1px 3px;
+  border-radius: 3px;
+  color: @primary-color;
+  position: absolute;
+  z-index: 10;
+  right: 15px;
+  top: 15px;
+  cursor: pointer;
 }
